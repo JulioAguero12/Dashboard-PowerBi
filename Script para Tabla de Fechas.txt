@@ -1,0 +1,20 @@
+let
+   Origen = Orders[OrderDate],
+   Min = List.Min(Origen),
+   Max = List.Max(Origen),
+   Fechas = List.Dates(Min, Number.From(Max)-Number.From(Min)+1, #duration(1,0,0,0)),
+   #"Convertida en tabla" = Table.FromList(Fechas, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+   #"Columnas con nombre cambiado" = Table.RenameColumns(#"Convertida en tabla",{{"Column1", "Fecha"}}),
+   #"Tipo cambiado" = Table.TransformColumnTypes(#"Columnas con nombre cambiado",{{"Fecha", type date}}),
+   #"Año insertado" = Table.AddColumn(#"Tipo cambiado", "Año", each Date.Year([Fecha]), type number),
+   #"Mes insertado" = Table.AddColumn(#"Año insertado", "Numero de Mes", each Date.Month([Fecha]), type number),
+   #"Día insertado" = Table.AddColumn(#"Mes insertado", "Dia", each Date.Day([Fecha]), type number),
+   #"Trimestre insertado" = Table.AddColumn(#"Día insertado", "Trimestre", each Date.QuarterOfYear([Fecha]), type number),
+   #"Mes" = Table.AddColumn(#"Trimestre insertado", "Mes", each Date.ToText([Fecha], "MMM", "es-PA")),
+   #"Mes Año" = Table.AddColumn(Mes, "Mes Año", each [Mes] & " " & Number.ToText([Año])),
+   #"Dia de la semana" = Table.AddColumn(#"Mes Año", "Día de la Semana", each Date.ToText([Fecha], "ddd", "es-PA")),
+   #"Mes Año ID" = Table.AddColumn(#"Dia de la semana", "MesAñoID", each Number.ToText([Año]) & Date.ToText([Fecha], "MM")),
+   #"nFecha" = Table.AddColumn(#"Mes Año ID", "nFecha", each [Fecha]),
+   #"Tipo cambiado1" = Table.TransformColumnTypes(nFecha,{{"nFecha", Int64.Type}, {"Año", Int64.Type}, {"MesAñoID", Int64.Type}, {"Día de la Semana", type text}, {"Mes Año", type text}, {"Mes", type text}, {"Trimestre", Int64.Type}, {"Dia", Int64.Type}, {"Numero de Mes", Int64.Type}})
+in
+    #"Tipo cambiado1"
