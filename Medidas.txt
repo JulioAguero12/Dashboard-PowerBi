@@ -1,0 +1,80 @@
+--------------------Leyenda----------------------------
+Variation PM = Variación por Mes
+Cnt Ord = Conteo de Pedidos
+Cnt Ord LM = Conteo de Pedidos Mes Pasado
+Qty PS = Cantidad de Productos Vendidos
+Qty PS-LM = Cantidad de Productos Vendidos Mes Pasado
+GrossSales = Ventas Brutas
+NetSales = Ventas Netas
+NetSales AVG = Promedio Ventas Netas
+NetSales LM = Ventas Netas Mes Pasado
+CurrentYear = Año Actual
+GrossSales CY = Ventas Brutas Año Actual
+GrossSales LY = Ventas Brutas Año Pasado
+LastYear = Año Pasado
+Variation PY = Variacion por Año
+
+--------------------Month Measures----------------------------
+Variation PM = 
+VAR LM = CALCULATE([NetSales],PARALLELPERIOD('Date'[Fecha],-1,MONTH))
+VAR TM = [NetSales]
+VAR RESULT = IFERROR((TM-LM)/LM,"N/A")
+RETURN RESULT
+
+--------------------Orders Measures----------------------------
+Cnt Ord = COUNT('Order Details'[OrderID])
+
+Cnt Ord LM = CALCULATE([Cnt Ord],PARALLELPERIOD('Date'[Fecha],-1,MONTH))
+
+--------------------Products Measures----------------------------
+Qty PS = SUM('Order Details'[Quantity])
+
+Qty PS-LM = CALCULATE([Qty PS],PARALLELPERIOD('Date'[Fecha],-1,MONTH))
+
+--------------------Sales Measures----------------------------
+GrossSales = SUMX('Order Details','Order Details'[Quantity] * 'Order Details'[UnitPrice])
+
+NetSales = SUMX('Order Details',
+'Order Details'[Quantity]*('Order Details'[UnitPrice] - ('Order Details'[UnitPrice] * 'Order Details'[Discount]))
+)
+
+NetSales AVG = AVERAGEX('Order Details',
+'Order Details'[Quantity]*('Order Details'[UnitPrice]-('Order Details'[UnitPrice] * 'Order Details'[Discount]))
+)
+
+NetSales LM = CALCULATE([NetSales],PARALLELPERIOD('Date'[Fecha],-1,MONTH))
+
+--------------------Year Measures----------------------------
+CurrentYear = CALCULATE(MAX('Date'[Año]),ALLSELECTED())
+
+GrossSales CY = 
+VAR x = [CurrentYear] RETURN 
+CALCULATE([GrossSales],'Date'[Año] = x)
+
+GrossSales LY = 
+VAR x = [LastYear]
+VAR y = [CurrentYear] RETURN
+CALCULATE([GrossSales], 'Date'[Año] = X, CALCULATETABLE(VALUES('Date'[Mes]),'Date'[Año]=y))
+
+LastYear = [CurrentYear] - 1
+
+Variation PY = IF([GrossSales LY] = 0,0,([GrossSales CY] - [GrossSales LY])/[GrossSales LY])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
