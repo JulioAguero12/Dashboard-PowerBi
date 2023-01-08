@@ -1,4 +1,4 @@
---------------------Leyenda-----------------------------
+--------------------Leyenda------------------------------
 Variation PM = Variación por Mes
 Cnt Ord = Conteo de Pedidos
 Cnt Ord LM = Conteo de Pedidos Mes Pasado
