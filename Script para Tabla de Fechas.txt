@@ -6,15 +6,15 @@ let
    #"Convertida en tabla" = Table.FromList(Fechas, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
    #"Columnas con nombre cambiado" = Table.RenameColumns(#"Convertida en tabla",{{"Column1", "Fecha"}}),
    #"Tipo cambiado" = Table.TransformColumnTypes(#"Columnas con nombre cambiado",{{"Fecha", type date}}),
-   #"Año insertado" = Table.AddColumn(#"Tipo cambiado", "Año", each Date.Year([Fecha]), type number),
-   #"Mes insertado" = Table.AddColumn(#"Año insertado", "Numero de Mes", each Date.Month([Fecha]), type number),
-   #"Día insertado" = Table.AddColumn(#"Mes insertado", "Dia", each Date.Day([Fecha]), type number),
-   #"Trimestre insertado" = Table.AddColumn(#"Día insertado", "Trimestre", each Date.QuarterOfYear([Fecha]), type number),
+   #"AÃ±o insertado" = Table.AddColumn(#"Tipo cambiado", "AÃ±o", each Date.Year([Fecha]), type number),
+   #"Mes insertado" = Table.AddColumn(#"AÃ±o insertado", "Numero de Mes", each Date.Month([Fecha]), type number),
+   #"DÃ­a insertado" = Table.AddColumn(#"Mes insertado", "Dia", each Date.Day([Fecha]), type number),
+   #"Trimestre insertado" = Table.AddColumn(#"DÃ­a insertado", "Trimestre", each Date.QuarterOfYear([Fecha]), type number),
    #"Mes" = Table.AddColumn(#"Trimestre insertado", "Mes", each Date.ToText([Fecha], "MMM", "es-PA")),
-   #"Mes Año" = Table.AddColumn(Mes, "Mes Año", each [Mes] & " " & Number.ToText([Año])),
-   #"Dia de la semana" = Table.AddColumn(#"Mes Año", "Día de la Semana", each Date.ToText([Fecha], "ddd", "es-PA")),
-   #"Mes Año ID" = Table.AddColumn(#"Dia de la semana", "MesAñoID", each Number.ToText([Año]) & Date.ToText([Fecha], "MM")),
-   #"nFecha" = Table.AddColumn(#"Mes Año ID", "nFecha", each [Fecha]),
-   #"Tipo cambiado1" = Table.TransformColumnTypes(nFecha,{{"nFecha", Int64.Type}, {"Año", Int64.Type}, {"MesAñoID", Int64.Type}, {"Día de la Semana", type text}, {"Mes Año", type text}, {"Mes", type text}, {"Trimestre", Int64.Type}, {"Dia", Int64.Type}, {"Numero de Mes", Int64.Type}})
+   #"Mes AÃ±o" = Table.AddColumn(Mes, "Mes AÃ±o", each [Mes] & " " & Number.ToText([AÃ±o])),
+   #"Dia de la semana" = Table.AddColumn(#"Mes AÃ±o", "DÃ­a de la Semana", each Date.ToText([Fecha], "ddd", "es-PA")),
+   #"Mes AÃ±o ID" = Table.AddColumn(#"Dia de la semana", "MesAÃ±oID", each Number.ToText([AÃ±o]) & Date.ToText([Fecha], "MM")),
+   #"nFecha" = Table.AddColumn(#"Mes AÃ±o ID", "nFecha", each [Fecha]),
+   #"Tipo cambiado1" = Table.TransformColumnTypes(nFecha,{{"nFecha", Int64.Type}, {"AÃ±o", Int64.Type}, {"MesAÃ±oID", Int64.Type}, {"DÃ­a de la Semana", type text}, {"Mes AÃ±o", type text}, {"Mes", type text}, {"Trimestre", Int64.Type}, {"Dia", Int64.Type}, {"Numero de Mes", Int64.Type}})
 in
-    #"Tipo cambiado1"
+    #"Tipo cambiado1" 
