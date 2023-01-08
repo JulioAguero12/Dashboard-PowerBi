@@ -8,3 +8,4 @@ Se manejo datos de la base de datos Northwind para hacer sus respectivos dashboa
 4. ashboard de Rendimiento de Ventas.
 
 Se adjunto un script de la base de datos Northwind.
+ 
